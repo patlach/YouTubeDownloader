@@ -8,48 +8,25 @@ namespace YouTubeVideoDownloader
 {
     internal class Program
     {
-        static async Task Main()
+        static void Main()
         {
-            Console.WriteLine("Welcome to YouTube Downloader");
-            Console.WriteLine("Choose what you want:");
-            Console.WriteLine("Show video info - press 1");
-            Console.WriteLine("Download one video - press 2");
-            Console.WriteLine("Download playlist - press 3");
+            Console.WriteLine("Link");
+            string link = Console.ReadLine();
+            // создадим отправителя
+            var sender = new Sender();
 
-            try
-            {
-                int press = int.Parse(Console.ReadLine());
+            // создадим получателя
+            var receiver = new Receiver();
 
-                switch (press)
-                {
-                    case 1:
-                        Console.WriteLine("Enter link to video on YouTube");
-                        string info = Console.ReadLine();
-                        SingleVideoInfo singleVideoInfo = new SingleVideoInfo();
-                        await singleVideoInfo.ShowInfo(info);
-                        break;
-                    case 2:
-                        Console.WriteLine("Enter link to video on YouTube");
-                        string video = Console.ReadLine();
-                        SingleVideo singleVideo = new SingleVideo();
-                        await singleVideo.Download(video);
-                        break;
-                    case 3:
-                        Console.WriteLine("Enter link to playlist on YouTube");
-                        string playlist = Console.ReadLine();
-                        Playlist plist = new Playlist();
-                        await plist.Download(playlist);
-                        break;
-                    default:
-                        Console.WriteLine("try again");
-                        break;
+            // создадим команду
+            var singleVideo = new SingleVideo(receiver);
+            var singleVideoInfo = new SingleVideoInfo(receiver);
 
-                }
-            }
-            catch (Exception ex)
-            { 
-                Console.WriteLine(ex.Message);
-            }
+            sender.SetCommand(singleVideo);
+            sender.Run(link);
+
+            sender.SetCommand(singleVideoInfo);
+            sender.Run(link);
         }
     }
 }

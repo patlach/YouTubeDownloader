@@ -7,20 +7,37 @@ using YoutubeExplode.Videos.Streams;
 
 namespace YouTubeVideoDownloader
 {
-    public class SingleVideoInfo
+    class SingleVideoInfo : Download
     {
-        public async Task ShowInfo(string linkToVideo)
+        Receiver receiver;
+
+        public SingleVideoInfo(Receiver receiver)
+        {
+            this.receiver = receiver;
+        }
+
+        // Выполнить
+        public override async Task Run(string link)
         {
             var youTube = new YoutubeClient();
-            var video = await youTube.Videos.GetAsync("https://youtube.com/watch?v=u_yIGGhubZs");
+            Console.WriteLine($"start download");
 
-            var title = video.Title; // "Collections - Blender 2.80 Fundamentals"
-            var author = video.Author.ChannelTitle; // "Blender"
-            var duration = video.Duration; // 00:07:20
+            try
+            {
+                var video = await youTube.Videos.GetAsync(link);
 
-            Console.WriteLine(title);
-            Console.WriteLine(author);
-            Console.WriteLine(duration);
+                var title = video.Title; // "Collections - Blender 2.80 Fundamentals"
+                var author = video.Author.ChannelTitle; // "Blender"
+                var duration = video.Duration; // 00:07:20
+
+                Console.WriteLine(title);
+                Console.WriteLine(author);
+                Console.WriteLine(duration);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
         }
     }
 }
